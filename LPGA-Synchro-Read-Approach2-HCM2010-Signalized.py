@@ -59,7 +59,7 @@ def GetRelevantDat(file,SkRow=0):
 # Common path to the Synchro Files 
 fi = os.path.abspath('C:\\Users\\abibeka\\OneDrive - Kittelson & Associates, Inc\\Documents\\LPGA\\ToFDOT\\Synchro-Results\\Text Report')
 ## Synchro file name
-fi_AM = os.path.join(fi,"LPGA-2025-AM.txt")
+fi_AM = os.path.join(fi,"LPGA-2025-AM-Build-HCM2010.txt")
 
 ## Read the tab delimited file
 file_object  = open(fi_AM, 'r')
@@ -71,7 +71,11 @@ for num, line in enumerate(file_object,0):
     if(bool(re.search("^[1-6]:",line))):
         IntersectionsLineNO.append(num)
         IntersectionsName[num]=line
-        
+#Pop the Diamond interchange for future scenarios
+        # use regex expression later
+if fi_AM ==  os.path.join(fi,"LPGA-2025-AM-Build-HCM2010.txt"):
+    IntersectionsLineNO.pop(1)
+
 IntDetail_AM = {}
 IntSum_AM = {}
 NamesDict = {1:'Tomoka',2:'I95_SB',3:'I95_NB',4:'Technology',5:'Williamson',6:'N_Clyde'}
@@ -91,7 +95,7 @@ for i in IntersectionsLineNO:
 # Common path to the Synchro Files 
 fi = os.path.abspath('C:\\Users\\abibeka\\OneDrive - Kittelson & Associates, Inc\\Documents\\LPGA\\ToFDOT\\Synchro-Results\\Text Report')
 ## Synchro file name
-fi_PM = os.path.join(fi,"LPGA-2025-AM.txt")
+fi_PM = os.path.join(fi,"LPGA-2035-PM.txt")
 
 ## Read the tab delimited file
 file_object  = open(fi_PM, 'r')
