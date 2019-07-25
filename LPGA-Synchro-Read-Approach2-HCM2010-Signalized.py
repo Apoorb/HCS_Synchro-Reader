@@ -78,9 +78,6 @@ if fi_AM ==  os.path.join(fi,"LPGA-2025-AM-Build-HCM2010.txt"):
 
 IntDetail_AM = {}
 IntSum_AM = {}
-NamesDict = {1:'Tomoka',2:'I95_SB',3:'I95_NB',4:'Technology',5:'Williamson',6:'N_Clyde'}
-# Tomoka i = 0 
-lab =1
 for Indx in IntersectionsLineNO:
     IntDetail_AM[IntersectionsName[Indx]], IntSum_AM[IntersectionsName[Indx]] = GetRelevantDat(fi_AM,Indx)
 
@@ -110,9 +107,6 @@ for num, line in enumerate(file_object,0):
         
 IntDetail_PM = {}
 IntSum_PM = {}
-NamesDict = {1:'Tomoka',2:'I95_SB',3:'I95_NB',4:'Technology',5:'Williamson',6:'N_Clyde'}
-# Tomoka i = 0 
-lab =1
 for Indx in IntersectionsLineNO_PM:
     IntDetail_PM[IntersectionsName_PM[Indx]], IntSum_PM[IntersectionsName_PM[Indx]] = GetRelevantDat(fi_PM,Indx)
 
