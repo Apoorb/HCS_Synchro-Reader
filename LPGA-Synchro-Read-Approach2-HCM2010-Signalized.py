@@ -55,11 +55,12 @@ def GetRelevantDat(file,SkRow=0):
     return(Results1,Dat2)
 
 
+year = "2045"
 
 # Common path to the Synchro Files 
 fi = os.path.abspath('C:\\Users\\abibeka\\OneDrive - Kittelson & Associates, Inc\\Documents\\LPGA\\ToFDOT\\Synchro-Results\\Text Report')
 ## Synchro file name
-fi_AM = os.path.join(fi,"LPGA-2025-AM-Build-HCM2010.txt")
+fi_AM = os.path.join(fi,"LPGA-"+year+"-AM-Build-HCM2010.txt")
 
 ## Read the tab delimited file
 file_object  = open(fi_AM, 'r')
@@ -73,7 +74,7 @@ for num, line in enumerate(file_object,0):
         IntersectionsName[num]=line
 #Pop the Diamond interchange for future scenarios
         # use regex expression later
-if fi_AM ==  os.path.join(fi,"LPGA-2025-AM-Build-HCM2010.txt"):
+if fi_AM ==  os.path.join(fi,"LPGA-"+year+"-AM-Build-HCM2010.txt"):
     IntersectionsLineNO.pop(1)
 
 IntDetail_AM = {}
@@ -92,7 +93,7 @@ for i in IntersectionsLineNO:
 # Common path to the Synchro Files 
 fi = os.path.abspath('C:\\Users\\abibeka\\OneDrive - Kittelson & Associates, Inc\\Documents\\LPGA\\ToFDOT\\Synchro-Results\\Text Report')
 ## Synchro file name
-fi_PM = os.path.join(fi,"LPGA-2035-PM.txt")
+fi_PM = os.path.join(fi,"LPGA-"+year+"-PM-Build-HCM2010.txt")
 
 ## Read the tab delimited file
 file_object  = open(fi_PM, 'r')
@@ -105,6 +106,8 @@ for num, line in enumerate(file_object,0):
         IntersectionsLineNO_PM.append(num)
         IntersectionsName_PM[num]=line
         
+if fi_PM ==  os.path.join(fi,"LPGA-"+year+"-PM-Build-HCM2010.txt"):
+    IntersectionsLineNO_PM.pop(1)        
 IntDetail_PM = {}
 IntSum_PM = {}
 for Indx in IntersectionsLineNO_PM:

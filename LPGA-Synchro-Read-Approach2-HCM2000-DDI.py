@@ -41,7 +41,7 @@ def Get_Relvant_Dat(IntLineNo,QueueLineNo,fi_AM):
     DatQueue = DatQueue.transpose()
     DatQueue.columns = DatQueue.iloc[0]
     DatQueue =DatQueue.drop(DatQueue.index[0])
-    DatQueue.columns= ['Q_95Per']
+    DatQueue.columns= ['QLen']
     DatQueue.index.name = 'Movements'
         
     # Merge 
@@ -56,15 +56,16 @@ def Get_Relvant_Dat(IntLineNo,QueueLineNo,fi_AM):
     # Merge with Queue data
     Results = Results.merge(DatQueue,left_index=True,right_index=True)  
     #CAUTION: This is a bad move. Should use rename. This might mess up things
-    Results.columns = ["V/C_Ratio","LnGrpDelay","LnGrpLOS","ApproachDelay","ApproachLOS",'Q_95Per']
-    Results["QLen"] = Results.Q_95Per.apply(pd.to_numeric, errors='coerce').round(0)*25
+    Results.columns = ["V/C_Ratio","LnGrpDelay","LnGrpLOS","ApproachDelay","ApproachLOS",'QLen']
+    Results["QLen"] = Results.QLen.apply(pd.to_numeric, errors='coerce')/25
+    Results["QLen"] = Results.QLen.round(0)*25
     Results1 =  Results[["V/C_Ratio","LnGrpDelay","LnGrpLOS","QLen","ApproachDelay","ApproachLOS"]]
     Results1.index =pd.Categorical(Results1.index,[ 
                                         'WBL','WBT', 'WBR',
                                         'NEL','NET','NER',
                                        'NBL', 'NBT','NBR', 
                                        'EBL', 'EBT', 'EBR', 
-                                       'SEL','SET','SWR',
+                                       'SWL','SWT','SWR',
                                        'SBL', 'SBT', 'SBR'])
             
     Results1.LnGrpLOS =Results1[['LnGrpDelay','LnGrpLOS']].apply(lambda x: '{} [{}]'.format(x[0],x[1]),axis=1)
@@ -77,12 +78,12 @@ def Get_Relvant_Dat(IntLineNo,QueueLineNo,fi_AM):
     return(Results1,IntSum)
 
 
+year = "2045"
 
 # Common path to the Synchro Files 
 fi = os.path.abspath('C:\\Users\\abibeka\\OneDrive - Kittelson & Associates, Inc\\Documents\\LPGA\\ToFDOT\\Synchro-Results\\Text Report')
 ## Synchro file name
-fi_AM = os.path.join(fi,"LPGA-2025-AM-Build-HCM2000.txt")
-
+fi_AM = os.path.join(fi,"LPGA-"+year+"-AM-Build-HCM2000.txt")
 
 ## Read the tab delimited file
 file_object  = open(fi_AM, 'r')
@@ -146,3 +147,62 @@ for i in IntersectionsLineNO:
     
     
     
+#********************************************************************************
+    
+year = "2045"
+
+# Common path to the Synchro Files 
+fi = os.path.abspath('C:\\Users\\abibeka\\OneDrive - Kittelson & Associates, Inc\\Documents\\LPGA\\ToFDOT\\Synchro-Results\\Text Report')
+## Synchro file name
+fi_PM = os.path.join(fi,"LPGA-"+year+"-PM-Build-HCM2000.txt")
+
+## Read the tab delimited file
+file_object  = open(fi_PM, 'r')
+IntersectionsLineNO_PM = []
+IntersectionsName_PM = {}
+RawLines = []
+#https://www.geeksforgeeks.org/enumerate-in-python/
+LineHCM = 0
+for num, line in enumerate(file_object,0):
+    # Get HCM data
+    if(bool(re.search("HCM Signalized Intersection Capacity Analysis",line))):
+        LineHCM=num
+    #Get intersection not in HCM 2010 Analysis
+    if(bool(re.search("^[38]:",line))|bool(re.search("^[1-9][0-9]",line))):
+        if(num==LineHCM+1):
+            IntersectionsLineNO_PM.append(num)
+            IntersectionsName_PM[num]=line
+            print(LineHCM,"-",num)
+
+
+
+file_object.close()
+
+#Queue
+#******************************************************
+file_object  = open(fi_PM, 'r')
+QueueLineNO_PM = []
+QueueIntName_PM = {}
+RawLines = []
+#https://www.geeksforgeeks.org/enumerate-in-python/
+LineQueue = 0
+for num, line in enumerate(file_object,0):
+    # Get Queue data
+    if(bool(re.search("Queues",line))):
+        LineQueue=num
+    #Get intersection not in HCM 2010 Analysis
+    if(bool(re.search("^[38]:",line))|bool(re.search("^[1-9][0-9]",line))):
+        if(num==LineQueue+1):
+            QueueLineNO_PM.append(num)
+            QueueIntName_PM[num]=line
+            print(LineQueue,"-",num)
+
+
+IntDetail_PM = {}
+IntSum_PM = {}
+for IntHCM_No,QueueNo in zip(IntersectionsLineNO_PM,QueueLineNO_PM):
+    IntDetail_PM[IntersectionsName_PM[IntHCM_No]], IntSum_PM[IntersectionsName_PM[IntHCM_No]] = Get_Relvant_Dat(IntHCM_No,QueueNo,fi_PM)
+
+for i in IntersectionsLineNO_PM:
+    print(IntersectionsName_PM[i],IntSum_PM[IntersectionsName_PM[i]])
+    print('\n----------------------------------------------------\n')
