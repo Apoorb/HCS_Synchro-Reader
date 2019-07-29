@@ -60,7 +60,9 @@ year = "2045"
 # Common path to the Synchro Files 
 fi = os.path.abspath('C:\\Users\\abibeka\\OneDrive - Kittelson & Associates, Inc\\Documents\\LPGA\\ToFDOT\\Synchro-Results\\Text Report')
 ## Synchro file name
-fi_AM = os.path.join(fi,"LPGA-"+year+"-AM-Build-HCM2010.txt")
+fi_AM = os.path.join(fi,"LPGA-"+year+"-AM.txt")
+#fi_AM = os.path.join(fi,"LPGA-"+year+"-AM-Build-HCM2010.txt")
+
 
 ## Read the tab delimited file
 file_object  = open(fi_AM, 'r')
@@ -93,7 +95,9 @@ for i in IntersectionsLineNO:
 # Common path to the Synchro Files 
 fi = os.path.abspath('C:\\Users\\abibeka\\OneDrive - Kittelson & Associates, Inc\\Documents\\LPGA\\ToFDOT\\Synchro-Results\\Text Report')
 ## Synchro file name
-fi_PM = os.path.join(fi,"LPGA-"+year+"-PM-Build-HCM2010.txt")
+fi_PM = os.path.join(fi,"LPGA-"+year+"-PM.txt")
+#fi_PM = os.path.join(fi,"LPGA-"+year+"-PM-Build-HCM2010.txt")
+
 
 ## Read the tab delimited file
 file_object  = open(fi_PM, 'r')
