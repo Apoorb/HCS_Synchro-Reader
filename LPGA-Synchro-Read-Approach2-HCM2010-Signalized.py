@@ -55,7 +55,7 @@ def GetRelevantDat(file,SkRow=0):
     return(Results1,Dat2)
 
 
-year = "2045"
+year = "2025"
 
 # Common path to the Synchro Files 
 fi = os.path.abspath('C:\\Users\\abibeka\\OneDrive - Kittelson & Associates, Inc\\Documents\\LPGA\\ToFDOT\\Synchro-Results\\Text Report')
