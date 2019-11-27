@@ -115,6 +115,7 @@ plot_Vol(dat,x='S',dir1 = 'Southbound')
     
     
     
+
 for x in ['N','S']:
     for i,j in zip(['N','A'],['Normal','Atypical']):
         plt.figure()
@@ -136,4 +137,51 @@ for x in ['N','S']:
     
     
     
-    
+# Get Summary data for Normal days
+dat_Norm = dat[(dat.TYPE == 'N')].reset_index()
+dat_Norm_Long = pd.wide_to_long(dat_Norm, stubnames ="HR", i = ['BEGDATE','DIR'], j = "Hour")    
+dat_Norm_Long.rename(columns = {"HR":"Volume"},inplace=True)
+dat_Norm_wide = dat_Norm_Long.swaplevel(1,2).unstack().reset_index()
+
+dat_Norm_wide = dat_Norm_wide.drop(columns =["day","TYPE"])
+dat_Norm_wide.loc[:,'day'] = dat_Norm_wide.BEGDATE.dt.weekday_name
+mask = ~dat_Norm_wide.day.isin(["Saturday","Sunday"])
+dat_Norm_wide_Weekday = dat_Norm_wide[mask]
+dat_Norm_wide_Weekday.columns = [''.join(col).strip() for col in dat_Norm_wide_Weekday.columns.values]
+dat_Norm_wide_Weekday_Sum  = dat_Norm_wide_Weekday.groupby("Hour")[["VolumeN","VolumeS"]].mean()
+idx = pd.index
+dat_Norm_wide.day
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

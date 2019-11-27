@@ -28,22 +28,39 @@ dat2.rename(columns = {'TIME': 'RECORDNAME'},inplace=True)
 dat2.RECORDNAME = 'Volume'
 
 # Scale the volume data 
-dat2.iloc[:,2:] = dat2.iloc[:,2:] *5
-#Change volume data and columns to list --- so it can be written
-dat2Write = dat2.values.tolist()
-#Read the two 2 lines of the csv file separately 
-with open('VOLUME.csv', 'r') as readFile:
-    reader = csv.reader(readFile)
-    lines = list(reader)
-Header = lines[0:3]
+#Number of Years  = 2040 - 2016
+NumYears = 2040 - 2016
+GrowthRates = [0,1,2] # percent per year
+NetGrowthCalc = lambda x: (1+x/100)**NumYears
+NetGrowthRate = list(map(NetGrowthCalc,GrowthRates))
+NetGrowthRate
 
-Header[0] = ['[Lanes]']
-Header[1] =['Lane Group Data']
-Header[2][0] = 'RECORDNAME'
-Header[2].remove('TIME')
-#Write the top 2 lines of the csv file, column name and data 
-with open('Volume1.csv', 'w', newline = '') as writeFile:
-    writer = csv.writer(writeFile)
-    writer.writerows(Header)
-    writer.writerows(dat2Write)
-writeFile.close()
+def Output2040Vols(datCp = dat2, NetGrowthRt = 1):
+    datCp.iloc[:,2:] = datCp.iloc[:,2:].applymap(lambda x: x if not x else round(x*NetGrowthRt))
+    #Change volume data and columns to list --- so it can be written
+    dat2Write = datCp.values.tolist()
+    #Read the two 2 lines of the csv file separately 
+    with open('VOLUME.csv', 'r') as readFile:
+        reader = csv.reader(readFile)
+        lines = list(reader)
+    Header = lines[0:3]
+    
+    Header[0] = ['[Lanes]']
+    Header[1] =['Lane Group Data']
+    Header[2][0] = 'RECORDNAME'
+    Header[2].remove('TIME')
+    #Write the top 2 lines of the csv file, column name and data 
+    with open('Volume2040_GrwRt_{}.csv'.format(round(NetGrowthRt,2)), 'w', newline = '') as writeFile:
+        writer = csv.writer(writeFile)
+        writer.writerows(Header)
+        writer.writerows(dat2Write)
+    writeFile.close()
+    
+Output2040Vols(datCp = dat2, NetGrowthRt = NetGrowthRate[0])
+Output2040Vols(datCp = dat2, NetGrowthRt = NetGrowthRate[1])
+Output2040Vols(datCp = dat2, NetGrowthRt = NetGrowthRate[2])
+
+
+
+
+
