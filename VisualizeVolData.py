@@ -18,9 +18,9 @@ import matplotlib.pyplot as plt
 import seaborn as sns
 import os
 
-os.chdir(r'C:\Users\abibeka\OneDrive - Kittelson & Associates, Inc\Documents\RampMetering')
+# os.chdir(r'C:\Users\abibeka\OneDrive - Kittelson & Associates, Inc\Documents\RampMetering')
 
-
+os.chdir(r'C:\Users\abibeka\OneDrive - Kittelson & Associates, Inc\Documents\Passive Projects\RampMetering')
 x1 = pd.ExcelFile('DatSouthSR40--I75.xlsx')
 x1.sheet_names
 dat = x1.parse('Subset Data South of SR 40')
@@ -77,44 +77,46 @@ def plot_Vol(dat, x='N',dir1 = 'Northbound'):
     dat1.drop(columns='DIR',inplace=True)  
     dat1 = dat1.reset_index()
     dat1 = pd.wide_to_long(dat1,['HR'],i='BEGDATE',j='Hour').reset_index()
-    dat1.rename(columns={'HR' : 'Vol'},inplace=True)
+    dat1.rename(columns={'HR' : 'Vol', 'day': 'Day'},inplace=True)
     dat1.Hour = dat1.Hour-1
-    
-    g = sns.catplot(x='Hour',y='Vol',data=dat1[dat1.TYPE=='N'], col='day',col_wrap=3,kind ='box',
+    sns.set(font_scale=2.5, style='whitegrid')
+    sns.set_palette(palette='colorblind',n_colors=24)
+    g = sns.catplot(x='Hour',y='Vol',data=dat1[dat1.TYPE=='N'], col='Day',col_wrap=2,kind ='box',
                 col_order=['Monday','Tuesday','Wednesday','Thursday','Friday'
-                           ,'Saturday','Sunday'])
+                           ,'Saturday','Sunday'], height=7, aspect=2)
+    g.set_ylabels('Volume (veh/hr)')
     plt.subplots_adjust(top=0.9)
-    g.fig.suptitle("{}—Normal".format(dir1),fontsize =15)
-    plt.savefig('{}_NormalDayVol.jpg'.format(dir1))
-    g = sns.catplot(x='Hour',y='Vol',data=dat1[dat1.TYPE=='A'], col='day',col_wrap=3,kind ='box',
+    g.fig.suptitle("{}—Normal".format(dir1),fontsize =35)
+    plt.savefig('{}_NormalDayVol.png'.format(dir1))
+    g = sns.catplot(x='Hour',y='Vol',data=dat1[dat1.TYPE=='A'], col='Day',col_wrap=2,kind ='box',
                 col_order=['Monday','Tuesday','Wednesday','Thursday','Friday'
-                           ,'Saturday','Sunday'])
+                           ,'Saturday','Sunday'],height=7, aspect=2)
+    g.set_ylabels('Volume (veh/hr)')
     plt.subplots_adjust(top=0.9)
     g.fig.suptitle("{}—Atypical".format(dir1),fontsize =15)
-    plt.savefig('{}_AtypicalDayVol.jpg'.format(dir1))
+    plt.savefig('{}_AtypicalDayVol.png'.format(dir1))
     
-    dat1.BEGDATE = dat1.BEGDATE.dt.date
+    # dat1.BEGDATE = dat1.BEGDATE.dt.date
     
-    sns.catplot(x='Hour',y='Vol',data=dat1[dat1.TYPE=='S'], col='BEGDATE',col_wrap=3,
-                kind='bar',palette='Set2')
-    plt.subplots_adjust(top=0.9)
-    g.fig.suptitle("{}—Special Events".format(dir1),fontsize =15)
-    g.savefig('{}_SplVol.jpg'.format(dir1))
-    
-    
-    g = sns.catplot(x='Hour',y='Vol',data=dat1[dat1.TYPE=='H'], col='BEGDATE',col_wrap=3,
-                kind='bar',palette='Set2')
-    
-    plt.subplots_adjust(top=0.9)
-    g.fig.suptitle("{}—Holiday Events".format(dir1),fontsize =15)
-    g.savefig('{}_HolidayVol.jpg'.format(dir1))
+    # sns.catplot(x='Hour',y='Vol',data=dat1[dat1.TYPE=='S'], col='BEGDATE',col_wrap=3,
+    # kind='bar', height=5, aspect=1.75)
+    # g.set_ylabels('Volume (veh/hr)')
+    # plt.subplots_adjust(top=0.9)
+    # g.fig.suptitle("{}—Special Events".format(dir1),fontsize =15)
+    # g.savefig('{}_SplVol.png'.format(dir1))
+    # g = sns.catplot(x='Hour',y='Vol',data=dat1[dat1.TYPE=='H'], col='BEGDATE',col_wrap=3,
+    #             kind='bar', height=5, aspect=1.75)
+    # g.set_ylabels('Volume (veh/hr)')
+    # plt.subplots_adjust(top=0.9)
+    # g.fig.suptitle("{}—Holiday Events".format(dir1),fontsize =15)
+    # g.savefig('{}_HolidayVol.png'.format(dir1))
     
 
 plot_Vol(dat,x='N',dir1 = 'Northbound') 
 plot_Vol(dat,x='S',dir1 = 'Southbound') 
     
-    
-    
+sns.palplot(sns.color_palette("colorblind", 24))
+sns.palplot(sns.diverging_palette(145, 25, n=7))
 
 for x in ['N','S']:
     for i,j in zip(['N','A'],['Normal','Atypical']):

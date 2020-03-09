@@ -50,7 +50,7 @@ def Output2040Vols(datCp = dat2, NetGrowthRt = 1):
     Header[2][0] = 'RECORDNAME'
     Header[2].remove('TIME')
     #Write the top 2 lines of the csv file, column name and data 
-    with open('Volume2040_GrwRt_{}.csv'.format(round(NetGrowthRt,2)), 'w', newline = '') as writeFile:
+    with open('Volume2040_NetGrwRt_{}.csv'.format(round(NetGrowthRt,2)), 'w', newline = '') as writeFile:
         writer = csv.writer(writeFile)
         writer.writerows(Header)
         writer.writerows(dat2Write)
